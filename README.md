@@ -15,4 +15,6 @@
 - Tailwind CSS
 - ShadCN UI
 
+### API Key
 
+- Make sure to get your own API from Google AI Studio <https://aistudio.google.com/>
