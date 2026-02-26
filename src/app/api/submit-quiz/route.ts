@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs/promises"
-import { client } from "@/lib/open-ai"
+import { client } from "@/lib/gemini-ai"
 
 export async function POST(req: NextRequest) {
   const data = await req.json()
@@ -8,31 +8,28 @@ export async function POST(req: NextRequest) {
 
   try {
     const instructions = await fs.readFile("submit-quiz.txt", "utf-8")
-    const response = await client.responses.create({
-      model: "gpt-4o-mini",
-      input: [
-        {
-          role: "system",
-          content: "You are a helpful assistant designed to output JSON.",
-        },
-        {
-          role: "user",
-          content: context,
-        },
-        {
-          role: "user",
-          content: questions.join("\n\n"),
-        },
-        {
-          role: "user",
-          content: answers.join("\n\n"),
-        },
-      ],
-      instructions,
+    const response = await client.models.generateContent({
+      model: "gemini-3-flash-preview",
+      config: {
+        systemInstruction: instructions,
+      },
+      contents: {
+        parts: [
+          {
+            text: context,
+          },
+          {
+            text: questions.join("\n\n"),
+          },
+          {
+            text: answers.join("\n\n"),
+          },
+        ],
+      },
     })
 
     return NextResponse.json(
-      { result: response.output_text },
+      { result: response.text },
       {
         status: 200,
       },

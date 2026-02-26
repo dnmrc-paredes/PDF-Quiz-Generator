@@ -17,6 +17,7 @@ const useSubmitResult = ({
 }: UseSubmitResultProps) => {
   const [score, setScore] = useState<number | null>(null)
   const [isOpenModal, setIsOpenModal] = useState(false)
+  const [correctAnswers, setCorrectAnswers] = useState<boolean[] | null>(null)
 
   const handleSubmitResult = async () => {
     if (!FormSchema.safeParse(form.getValues()).success) {
@@ -44,6 +45,11 @@ const useSubmitResult = ({
       const score = result.question.filter(
         (item: { correct: boolean }) => item.correct,
       ).length
+      const corrects = result.question.map(
+        (item: { correct: boolean }) => item.correct,
+      )
+
+      setCorrectAnswers(corrects)
       setScore(score)
       setIsOpenModal(true)
     } catch (err: unknown) {
@@ -54,7 +60,13 @@ const useSubmitResult = ({
     }
   }
 
-  return { handleSubmitResult, score, isOpenModal, setIsOpenModal }
+  return {
+    handleSubmitResult,
+    score,
+    isOpenModal,
+    setIsOpenModal,
+    correctAnswers,
+  }
 }
 
 export { useSubmitResult }
