@@ -111,6 +111,13 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --dlb: #355872;
+  --ldlb: #7aaace;
+  --lb: #9cd5ff;
+  --lg: #9cd5ff;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

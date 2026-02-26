@@ -33,15 +33,23 @@ function QuizForm() {
     fullText,
     isLoading,
     questionnaire,
+    fileName,
   } = useGenerateQuiz({ form })
-  const { handleSubmitResult, score, isOpenModal, setIsOpenModal } =
-    useSubmitResult({ fullText, form, questionnaire })
+  const {
+    handleSubmitResult,
+    score,
+    isOpenModal,
+    setIsOpenModal,
+    correctAnswers,
+  } = useSubmitResult({ fullText, form, questionnaire })
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <UploadPDF
         handleGenerateQuiz={handleGenerateQuiz}
         handleFileChange={handleFileChange}
+        fileName={fileName}
+        isQuestionnaireGenerated={!!questionnaire}
       />
 
       <Dialog open={isOpenModal} onOpenChange={setIsOpenModal}>
@@ -62,6 +70,7 @@ function QuizForm() {
         handleSubmitResult={handleSubmitResult}
         isLoading={isLoading}
         questionnaire={questionnaire}
+        correctAnswers={correctAnswers}
       />
     </div>
   )

@@ -20,9 +20,10 @@ import type { Questionnaire, FormValues } from "@/types"
 
 type QuestionnaireProps = {
   form: UseFormReturn<FormValues>
-  handleSubmitResult: () => Promise<string | number | undefined>
+  handleSubmitResult: () => void
   questionnaire?: Questionnaire[] | null
   isLoading: boolean
+  correctAnswers?: boolean[] | null
 }
 
 const QuestionnaireForm = ({
@@ -30,6 +31,7 @@ const QuestionnaireForm = ({
   handleSubmitResult,
   questionnaire,
   isLoading,
+  correctAnswers,
 }: QuestionnaireProps) => {
   return (
     <Form {...form}>
@@ -50,7 +52,10 @@ const QuestionnaireForm = ({
                     name={`answer${itemNumber}` as keyof FormValues}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="w-full">
+                        <FormLabel
+                          data-is-correct={correctAnswers?.[idx]}
+                          className="w-full [&[data-is-correct=true]]:text-green-500 [&[data-is-correct=false]]:text-red-500"
+                        >
                           {itemNumber}.) {item.question}
                         </FormLabel>
                         <Select
@@ -65,7 +70,12 @@ const QuestionnaireForm = ({
                           <SelectContent>
                             <SelectGroup>
                               {item.choices?.map((answer) => (
-                                <SelectItem value={answer} key={answer}>
+                                <SelectItem
+                                  className="cursor-pointer"
+                                  disabled={!!correctAnswers}
+                                  value={answer}
+                                  key={answer}
+                                >
                                   {answer}
                                 </SelectItem>
                               ))}
@@ -83,7 +93,11 @@ const QuestionnaireForm = ({
         )}
 
         {questionnaire && (
-          <Button disabled={form.formState.isSubmitting} type="submit">
+          <Button
+            disabled={form.formState.isSubmitting}
+            className="font-bold bg-[var(--dlb)]"
+            type="submit"
+          >
             Submit
           </Button>
         )}

@@ -12,6 +12,7 @@ const useGenerateQuiz = ({ form }: { form: UseFormReturn<FormValues> }) => {
   )
   const [isLoading, setIsLoading] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [fileName, setFileName] = useState<string>("")
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
@@ -20,6 +21,7 @@ const useGenerateQuiz = ({ form }: { form: UseFormReturn<FormValues> }) => {
       return toast.error("Please upload a PDF file.")
     }
 
+    setFileName(selectedFile.name)
     setFile(selectedFile)
   }
 
@@ -56,7 +58,7 @@ const useGenerateQuiz = ({ form }: { form: UseFormReturn<FormValues> }) => {
       const questions = JSON.parse(data.result)
 
       setFullText(parsedText ?? "")
-      setQuestionnaire(questions.questions)
+      setQuestionnaire(questions)
     } catch (err) {
       if (err instanceof Error) {
         return toast.error(err.message)
@@ -73,6 +75,7 @@ const useGenerateQuiz = ({ form }: { form: UseFormReturn<FormValues> }) => {
     fullText,
     isLoading,
     questionnaire,
+    fileName,
   }
 }
 
